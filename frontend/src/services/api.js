@@ -36,7 +36,6 @@ api.interceptors.response.use(
       // Handle 401 errors — only redirect if the token itself is rejected
       // (not for other request failures on authenticated routes)
       if (error.response.status === 401) {
-        const token = localStorage.getItem('token');
         // Only redirect if the 401 came from an auth/profile endpoint,
         // meaning the token is genuinely expired/invalid
         const url = error.config?.url || '';

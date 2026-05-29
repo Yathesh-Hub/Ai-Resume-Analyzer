@@ -589,7 +589,7 @@ export default function EnhanceResume() {
       setShowJdPanel(true);
       setJdMode('text');
     }
-  }, []); // run once on mount
+  }, [location.search, location.state]);
 
   useEffect(() => {
     (async () => {

@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 
 const ScoreRing = ({ score }) => {
-  const color = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
   const label = score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : 'Needs Work';
   return (
     <div className="flex flex-col items-center">
