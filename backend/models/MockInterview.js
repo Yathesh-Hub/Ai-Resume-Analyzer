@@ -3,12 +3,12 @@ const { sequelize } = require('../config/database');
 
 const MockInterview = sequelize.define('MockInterview', {
   id: {
-    type:          DataTypes.INTEGER,
-    primaryKey:    true,
-    autoIncrement: true
+    type:         DataTypes.UUID,
+    primaryKey:   true,
+    defaultValue: DataTypes.UUIDV4
   },
   userId: {
-    type:      DataTypes.INTEGER,
+    type:      DataTypes.UUID,
     allowNull: false,
     references: {
       model: 'users',
@@ -18,7 +18,7 @@ const MockInterview = sequelize.define('MockInterview', {
     onUpdate: 'CASCADE'
   },
   resumeId: {
-    type:      DataTypes.INTEGER,
+    type:      DataTypes.UUID,
     allowNull: true,
     references: {
       model: 'resumes',

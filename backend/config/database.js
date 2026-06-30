@@ -1,43 +1,26 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
-// Render PostgreSQL connection with optimized settings
+// CockroachDB connection — uses the postgres dialect with SSL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
   logging: false,
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      ...(process.env.DB_CA_CERT && { ca: process.env.DB_CA_CERT })
     },
     connectTimeout: 60000,
     keepAlive: true,
     keepAliveInitialDelayMillis: 10000
   },
   pool: {
-    max: 10,
-    min: 2,
-    acquire: 60000,
-    idle: 10000,
-    evict: 10000
-  },
-  retry: {
     max: 5,
-    timeout: 3000,
-    match: [
-      /SequelizeConnectionError/,
-      /SequelizeConnectionRefusedError/,
-      /SequelizeHostNotFoundError/,
-      /SequelizeHostNotReachableError/,
-      /SequelizeInvalidConnectionError/,
-      /SequelizeConnectionTimedOutError/,
-      /TimeoutError/,
-      /ETIMEDOUT/,
-      /ECONNREFUSED/,
-      /ENOTFOUND/,
-      /ENETUNREACH/,
-      /ECONNRESET/
-    ]
+    min: 0,        // 0 so idle connections are released (important for serverless)
+    acquire: 60000,
+    idle: 20000,
+    evict: 5000
   }
 });
 
@@ -66,18 +49,20 @@ const connectDB = async () => {
   const maxRetries = 3;
   let retryCount = 0;
 
-  console.log('🔌 Connecting to Render PostgreSQL database...');
+  console.log('🔌 Connecting to CockroachDB...');
 
   while (retryCount < maxRetries) {
     try {
       await sequelize.authenticate();
       console.log('✅ Database connected successfully!');
 
-      // Load models and associations before syncing
       loadModels();
 
-      await sequelize.sync({ alter: false });
-      console.log('✅ All tables synced.');
+      // sync separately — don't let a slow sync kill the connection
+      sequelize.sync({ alter: false })
+        .then(() => console.log('✅ All tables synced.'))
+        .catch(err => console.error('⚠️  Table sync failed (non-fatal):', err.message));
+
       return true;
     } catch (error) {
       retryCount++;
@@ -90,13 +75,8 @@ const connectDB = async () => {
 
       if (retryCount >= maxRetries) {
         console.error('\n❌ Failed to connect to database after multiple attempts.');
-        console.error('   Please check:');
-        console.error('   1. Your internet connection');
-        console.error('   2. Render database is active (https://dashboard.render.com/)');
-        console.error('   3. DATABASE_URL is correct in .env file');
-        console.error('   4. Firewall/VPN is not blocking the connection');
-        console.error('   5. Try disabling VPN if you have one active\n');
-        process.exit(1);
+        console.error('   Server will continue running but DB features will not work.\n');
+        return false;  // don't exit — let the server run
       }
 
       console.log(`⏳ Retrying in 2 seconds...\n`);

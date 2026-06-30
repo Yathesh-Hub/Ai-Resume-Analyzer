@@ -3,12 +3,12 @@ const { sequelize } = require('../config/database');
 
 const Resume = sequelize.define('Resume', {
   id: {
-    type:          DataTypes.INTEGER,
-    primaryKey:    true,
-    autoIncrement: true
+    type:         DataTypes.UUID,
+    primaryKey:   true,
+    defaultValue: DataTypes.UUIDV4
   },
   userId: {
-    type:      DataTypes.INTEGER,
+    type:      DataTypes.UUID,
     allowNull: false,
     references: {
       model: 'users',
