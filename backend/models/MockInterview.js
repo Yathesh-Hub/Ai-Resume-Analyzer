@@ -9,11 +9,23 @@ const MockInterview = sequelize.define('MockInterview', {
   },
   userId: {
     type:      DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'users',
+      key:   'id'
+    },
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   },
   resumeId: {
     type:      DataTypes.INTEGER,
-    allowNull: true
+    allowNull: true,
+    references: {
+      model: 'resumes',
+      key:   'id'
+    },
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE'
   },
   role: {
     type:      DataTypes.STRING(100),
@@ -41,5 +53,11 @@ const MockInterview = sequelize.define('MockInterview', {
   tableName:  'mock_interviews',
   timestamps: true
 });
+
+// Associations — defined here so they load when models are required together
+MockInterview.associate = (models) => {
+  MockInterview.belongsTo(models.User,   { foreignKey: 'userId',   onDelete: 'CASCADE' });
+  MockInterview.belongsTo(models.Resume, { foreignKey: 'resumeId', onDelete: 'SET NULL' });
+};
 
 module.exports = MockInterview;

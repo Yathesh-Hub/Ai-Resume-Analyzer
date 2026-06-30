@@ -59,4 +59,10 @@ User.prototype.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Associations
+User.associate = (models) => {
+  User.hasMany(models.Resume,        { foreignKey: 'userId', onDelete: 'CASCADE' });
+  User.hasMany(models.MockInterview, { foreignKey: 'userId', onDelete: 'CASCADE' });
+};
+
 module.exports = User;

@@ -72,4 +72,10 @@ const Resume = sequelize.define('Resume', {
   ]
 });
 
+// Associations
+Resume.associate = (models) => {
+  Resume.belongsTo(models.User,          { foreignKey: 'userId' });
+  Resume.hasMany(models.MockInterview,   { foreignKey: 'resumeId', onDelete: 'SET NULL' });
+};
+
 module.exports = Resume;

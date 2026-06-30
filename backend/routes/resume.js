@@ -147,7 +147,6 @@ router.delete('/:id', protect, [
 // Helper: shape resume data for frontend
 function formatResume(r) {
   return {
-    _id: r.id,
     id: r.id,
     fileName: r.fileName,
     fileType: r.fileType,
