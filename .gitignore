@@ -1,13 +1,8 @@
-# ── Dependencies ──────────────────────────────────────────────────────────────
 node_modules/
 */node_modules/
 **/node_modules/
-
-# ── Environment & Secrets ─────────────────────────────────────────────────────
-# Never commit .env files — they contain API keys, DB passwords, JWT secrets
 .env
 .env.*
-!.env.example        # only the example template is safe to commit
 *.env
 backend/.env
 frontend/.env
@@ -21,7 +16,6 @@ frontend/.env
 .env.staging
 .env.backup
 
-# SSL / TLS certificates and private keys
 *.pem
 *.key
 *.crt
@@ -30,7 +24,6 @@ frontend/.env
 *.pfx
 *.jks
 
-# Secret / credential files
 secrets/
 credentials/
 *.credentials
@@ -38,7 +31,6 @@ serviceAccountKey.json
 firebase-adminsdk*.json
 google-credentials*.json
 
-# ── Build Outputs ─────────────────────────────────────────────────────────────
 build/
 dist/
 out/
@@ -50,8 +42,6 @@ backend/dist/
 .nuxt/
 .svelte-kit/
 
-# ── Uploaded Files & User-Generated Content ───────────────────────────────────
-# Keep directory structure but never commit actual uploaded files
 uploads/*
 */uploads/*
 backend/uploads/*
@@ -60,7 +50,6 @@ backend/uploads/jd-temp/
 !*/uploads/.gitkeep
 !backend/uploads/.gitkeep
 
-# ── Logs ──────────────────────────────────────────────────────────────────────
 logs/
 *.log
 npm-debug.log*
@@ -69,14 +58,12 @@ yarn-error.log*
 lerna-debug.log*
 pnpm-debug.log*
 
-# ── Testing & Coverage ────────────────────────────────────────────────────────
 coverage/
 *.coverage
 .nyc_output/
 .jest/
 jest_html_reporters-attach/
 
-# ── OS & System Files ─────────────────────────────────────────────────────────
 .DS_Store
 .DS_Store?
 ._*
@@ -87,7 +74,6 @@ Thumbs.db
 Desktop.ini
 *~
 
-# ── IDE & Editor ──────────────────────────────────────────────────────────────
 .vscode/
 !.vscode/extensions.json   # safe to share recommended extensions
 .idea/
@@ -105,7 +91,6 @@ Desktop.ini
 .settings/
 *.code-workspace
 
-# ── Package Managers ──────────────────────────────────────────────────────────
 .pnpm-store/
 .yarn/
 !.yarn/patches
@@ -116,7 +101,6 @@ Desktop.ini
 .npm/
 .pnp.*
 
-# ── Misc Cache & Temp ─────────────────────────────────────────────────────────
 .cache/
 .temp/
 .tmp/
